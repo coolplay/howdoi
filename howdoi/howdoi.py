@@ -16,7 +16,11 @@ import re
 import requests
 import requests_cache
 import sys
-from . import __version__
+# make it runable as script
+try:
+    from . import __version__
+except ValueError:
+    __version__ = '1.1.7'
 
 try:
     from urllib.parse import quote as url_quote
@@ -52,6 +56,8 @@ if os.getenv('HOWDOI_DISABLE_SSL'):  # Set http instead of https
     SEARCH_URL = 'http://www.google.com/search?q=site:{0}%20{1}'
 else:
     SEARCH_URL = 'https://www.google.com/search?q=site:{0}%20{1}'
+    # This works for me
+    SEARCH_URL = 'http://www.google.com/search?q=site:{0}%20{1}&gws_rd=ssl'
 
 URL = os.getenv('HOWDOI_URL') or 'stackoverflow.com'
 
@@ -232,7 +238,7 @@ def get_parser():
 def command_line_runner():
     parser = get_parser()
     args = vars(parser.parse_args())
-    
+
     if args['version']:
         print(__version__)
         return
